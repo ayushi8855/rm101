@@ -3,28 +3,41 @@ import axios from "axios"
 export const Table = () => {
 
     const [data, setData] = useState([])
+    const[country,setCountry] = useState("");
+      const [order,setOrder] = useState("")
+
 
     useEffect(() => {
       handleData()
     
      
-    }, [])
+    }, [order,country])
    
 
+    const CountryFilter = (value,change)=>{
+      setCountry(change)
+      setOrder(value)
+       }
+
     const handleData = () => {
-      axios.get(` http://localhost:8080/citys`)
-              .then(res => {
-                const result = res.data;
-                
-                setData(result)
-               
-              })
+      axios.get(`http://localhost:8080/citys?_sort=${country}&_order=${order}`).then((res)=>{
+        setData(res.data)
+    })
+  }
+
+    // console.log(data)
+
+    const Delete = (id)=> {
+      axios.delete(`http://localhost:8080/citys/${id}`).then((res)=>{setData([...res.data])})
     }
 
-    console.log(data)
 
     return (
         <div>
+           <button onClick={()=>CountryFilter("asc","country")}>ascending</button>
+      <button onClick={()=>CountryFilter("desc","country")}>decending</button>
+      <button onClick={()=>CountryFilter("desc","population")}>high to low</button>
+      <button onClick={()=>CountryFilter("asc","population")}>low to high</button>
           <div style={{marginLeft:'500px'}}>
            
             <table className="orders">
@@ -47,8 +60,8 @@ export const Table = () => {
                   <td className="Country">{e.country}</td>
                   <td className="city">{e.city}</td>
                   <td className="population">{e.population}</td>
-                  <td className="edit">edit</td>
-                  <td className="delete">delete</td>
+                  <td className="edit"><button>edit</button></td>
+                  <td className="delete"><button onClick={()=>{Delete(e.id)}}>delete</button></td>
                   
                  
                 </tr>
