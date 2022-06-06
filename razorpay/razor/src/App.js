@@ -1,6 +1,7 @@
 
 import './App.css';
-import useEffect from "react"
+import {useEffect} from "react"
+import {CourseCard} from "./components/CourseCard"
 function App() {
 
   const loadScript=(src)=>{
@@ -13,15 +14,16 @@ function App() {
       script.onerror=()=>{
         resolve(false)
       }
+      document.body.appendChild(script)
     })
   }
   useEffect(()=>{
     loadScript("https://checkout.razorpay.com/v1/checkout.js")
   })
   return (
-    <div className="App">
-     
-    </div>
+    <section className='card-list'>
+   <CourseCard/>
+    </section>
   );
 }
 
